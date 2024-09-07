@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}  {% block body %} 
+
+
+<div class="grid grid-cols-3 gap-4">
+    <div></div>
+    <div class="py-2 px-3 rounded-xl bg-white mt-12">
+        <div class="w-full mt-10">
+            <form method="post" class="shadow-md border border-gray-200 rounded px-8 pt-6 pb-8 mb-4">
+                <div class="flex items-center justify-center w-full p-3">
+                    <button class="btn bg-blue-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ">
+                        <a href="{% url 'transactions:borrow_report'%}" class="text-decoration-none text-light">Borrowed Books History</a>
+                    </button>                
+                </div>
+                <div class="flex items-center justify-center w-full p-3">
+                    <button class="btn bg-blue-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        <a href="{% url 'accounts:update_profile'%}" class="text-decoration-none text-light">Update Your Profile Information</a>
+                    </button>               
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+
+</div>
+<h2>Your Borrowed Books</h2>
+{% if borrowed_books %}
+<div class="d-flex flex-wrap justify-content-center px-5 pt-5">
+  {% for borrowed_book in borrowed_books %}
+    <div class="col-sm-3">
+      <div class="card mx-2">
+        <div class="card-body">
+          {% if borrowed_book.book.image %}
+          <img class="card-img-top" src="{{ borrowed_book.book.image.url }}" alt="Card image cap">
+          {% endif %}
+          <h5 class="card-title">{{borrowed_book.book.title}}</h5>
+          <h5 class="card-title">{{borrowed_book.book.author}}</h5>
+          <h5 class="card-title">Borrowing Price : Tk {{borrowed_book.book.borrowing_price}}</h5>
+          <h5 class="card-title">
+            <p>Category :
+            {% for cat in borrowed_book.book.category.all %}
+              <button type="button" class="btn btn-warning btn-sm m-2" disabled>{{ cat.name }}</button>
+            {% empty %}
+                No categories
+            {% endfor %}
+            <p>
+        </h5>
+          <a href="{%  url 'books:review_books' borrowed_book.book.id %}" class="btn btn-primary">Write A Review</a>
+          <button class="btn btn-danger m-3"><a href="{% url 'books:details_books' borrowed_book.book.id %}" class="text-decoration-none text-light p-5">View Detalis</a></button>
+        </div>
+      </div>
+    </div>
+    {% endfor %} 
+  </div> 
+{% else %}
+  <p>You haven't borrowed any books yet.</p>
+{% endif %}
+  
+{% endblock %}
+

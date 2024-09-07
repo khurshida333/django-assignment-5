@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <div class="row">
+    <div class="col-6 d-flex align-items-stretch">
+      <div class="card m-2 h-100">
+        <div class="card-body align-items-stretch">
+          <img src="{{ book.image.url }}" class="card-img-top" alt="..." style="width:50%; height: 90%;" />
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="col-6 d-flex align-items-stretch">
+      <div class="card m-2 h-100">
+        <div class="card-body align-items-stretch">
+          <h1 class="card-title fw-bold display-6">{{ book.title }}</h1>
+          <p class="card-text">{{ book.content }}</p>
+          <p>Author: {{ book.author.first_name }} {{ book.author.last_name }}</p>
+          <p>
+            Category:{% for cat in book.category.all %}
+              <button class="btn btn-warning btn-sm m-2" disabled>{{ cat.name }}</button>
+            {% endfor %}
+          </p>
+          <p>Borrow Price: {{ book.borrowing_price }}</p>
+          {% if request.user.is_authenticated and not book.is_borrowed %}
+            <button class="btn btn-danger"><a href="{% url 'transactions:borrow_books' book.id %}" class="text-decoration-none text-light">Borrow</a></button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-2 mt-3">
+    <h5 class="p-3 m-2">Total Reviews : {{ reviews|length }}</h5>
+    {% if reviews %}
+      {% for review in reviews %}
+         <div class="card-body border m-2">
+           <p>
+             <b>{{ review.name }}</b> {{ review.created_on }}
+           </p>
+           <p>{{ review.body }}</p>
+         </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p>No reviews yet.</p>
+  {% endif %}
+
+  <div class="p-5"></div>
+{% endblock %}

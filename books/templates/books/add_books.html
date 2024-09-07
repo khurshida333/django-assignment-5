@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{%  load crispy_forms_tags  %}
+{% block content %}
+
+<form class="w-50 m-auto" method="post" enctype="multipart/form-data">
+    
+<h1>Add new books to the library</h1>
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type='submit' class="btn btn-warning">Submit</button>
+</form>
+{% endblock%}

@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block head_title %} Borrow Report {% endblock %}
+{% block body %}
+
+<div class="my-10 py-3 px-4 bg-white rounded-xl shadow-md">
+  <h1 class="font-bold text-3xl text-center pb-5 pt-2">Borrow Report</h1>
+  <hr />
+  
+  <!-- Table for displaying the report -->
+  <table class="table-auto mx-auto w-full px-5 rounded-xl mt-8 border dark:border-neutral-500">
+    <thead class="bg-purple-900 text-white text-left">
+      <tr class="bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-md py-2 px-4 text-white font-bold">
+        <th class="px-4 py-2">Date</th>
+        <th class="px-4 py-2">Book</th>
+        <th class="px-4 py-2">Author</th>
+        <th class="px-4 py-2">Transaction Type</th>
+        <th class="px-4 py-2">Amount</th>
+        <th class="px-4 py-2">.......</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for borrow in borrow_report_list %}
+      <tr class="border-b dark:border-neutral-500">
+        <td class="px-4 py-2">{{ borrow.borrowed_date|date:"F d, Y h:i A" }}</td>
+        <td class="px-4 py-2 text-s border">{{ borrow.book.title }}</td>
+        <td class="px-4 py-2 text-s border">{{ borrow.book.author }}</td>
+        <td class="px-4 py-3 text-s border">
+          <span class="px-2 py-1 font-bold leading-tight rounded-sm text-green-700 bg-green-100">
+            Borrow
+          </span>
+        </td>
+        <td class="px-4 py-2 text-s border ">$ {{ borrow.book.borrowing_price|floatformat:2|intcomma }}</td>
+        <td class="px-4 py-2 text-s border">
+          {% if borrow.book.is_borrowed%}
+        <button class="btn btn-danger">
+          <a href="{% url 'transactions:return_books' borrow.book.id %}" class="text-decoration-none text-light">Return</a>
+        </button>
+        {% endif %}
+      </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="px-4 py-2 text-center">No records found.</td>
+      </tr>
+      {% endfor %}
+      <tr class="bg-gray-800 text-white">
+        <th class="px-4 py-2 text-right" colspan="3">Current Balance</th>
+        <th class="px-4 py-2 text-left">$ {{ balance|floatformat:2|intcomma }}</th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
